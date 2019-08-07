@@ -4288,12 +4288,15 @@ module NUOPC_Connector
       endif    
     endif
     
+#if 0
+!TURNING OFF TIMESTAMP PROPAGATION
     ! build Timestamp update packets
     !TODO: consider whether CplSet needs extra treatment here or not
     call BuildUpdatePackets(is%wrap%srcFieldList, is%wrap%dstFieldList, &
       is%wrap%updatePackets, rc=rc)
     if (ESMF_LogFoundError(rcToCheck=rc, msg=ESMF_LOGERR_PASSTHRU, &
       line=__LINE__, file=trim(name)//":"//FILENAME)) return  ! bail out
+#endif
 
     if (btest(verbosity,4)) then
       write (msgString, '(A, ": CplSet List: ")') trim(name)
@@ -5044,6 +5047,8 @@ if (ESMF_LogFoundError(rcToCheck=rc, msg=ESMF_LOGERR_PASSTHRU, &
       call ESMF_LogWrite(msgString, ESMF_LOGMSG_INFO)
     endif
 
+#if 0
+!TURNING OFF TIMESTAMP PROPAGATION
     ! Next update the TimeStamp metadata on the export Fields....
 #if 1
     ! execute Timestamp update packets
@@ -5126,6 +5131,8 @@ if (ESMF_LogFoundError(rcToCheck=rc, msg=ESMF_LOGERR_PASSTHRU, &
         time0=time
       call ESMF_LogWrite(msgString, ESMF_LOGMSG_INFO)
     endif
+#endif
+
 #endif
 
     ! handle diagnostic
@@ -5297,11 +5304,14 @@ if (ESMF_LogFoundError(rcToCheck=rc, msg=ESMF_LOGERR_PASSTHRU, &
       line=__LINE__, file=trim(name)//":"//FILENAME, rcToReturn=rc)) &
       return  ! bail out
 
+#if 0
+!TURNING OFF TIMESTAMP PROPAGATION
     ! destroy Timestamp update packets
     !TODO: consider whether CplSet needs extra treatment here or not
     call DestroyUpdatePackets(is%wrap%updatePackets, rc=rc)
     if (ESMF_LogFoundError(rcToCheck=rc, msg=ESMF_LOGERR_PASSTHRU, &
       line=__LINE__, file=trim(name)//":"//FILENAME)) return  ! bail out
+#endif
 
     ! deallocate and destroy remaining internal state members
     do i=1, is%wrap%cplSetCount
