@@ -481,7 +481,8 @@ type(ESMF_KeywordEnforcer), optional:: keywordEnforcer ! must use keywords below
                                  ESMF_ERR_PASSTHRU, &
                                  ESMF_CONTEXT, rcToReturn=rc)) return
 
-
+      !tdk:bc: check for geometry reference in attributes. if there is one do
+      !        not serialize the geom base
       if (fp%status .eq. ESMF_FIELDSTATUS_GRIDSET .or. &
           fp%status .eq. ESMF_FIELDSTATUS_COMPLETE) then
         call ESMF_GeomBaseSerialize(fp%geombase, buffer, length, offset, &
@@ -595,6 +596,8 @@ type(ESMF_KeywordEnforcer), optional:: keywordEnforcer ! must use keywords below
                                 ESMF_ERR_PASSTHRU, &
                                 ESMF_CONTEXT, rcToReturn=rc)) return
 
+      !tdk:bc: check for geometry reference in attributes. if one exists, do
+      !        not perform a geom base deserialization.
       if (fp%status .eq. ESMF_FIELDSTATUS_GRIDSET .or. &
           fp%status .eq. ESMF_FIELDSTATUS_COMPLETE) then
           fp%geombase=ESMF_GeomBaseDeserialize(buffer, offset, &

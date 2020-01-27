@@ -1259,6 +1259,11 @@ contains
 
     end do ! needs_count
 
+    !tdk:bc: resolve field references for every field in the state (this includes
+    !        fields in a field bundle. after this step, fields should be valid
+    !        for the next steps in reconcile. all geometry reference attributes
+    !        should be removed.
+
     if (trace) then
       print *, '    pet', mypet,  &
           ': *** Deserialization complete'
@@ -2129,6 +2134,9 @@ contains
         ESMF_CONTEXT,  &
         rcToReturn=rc)) return
 
+    !tdk:bc: create geometry cache holding a geometry's unique identifier and
+    !        its container field's unique identifier should also be cached with it
+
 ! Element 0s are for the State itself
 
     itemtype(0) = ESMF_STATEITEM_STATE%ot
@@ -2192,6 +2200,8 @@ contains
             ESMF_CONTEXT,  &
             rcToReturn=rc)) return
 
+        !tdk:bc: check unique geometry cache. if seen, add attribute referencing
+        !        the geometry. if not seen, add the geometry to the cache
 
       case (ESMF_STATEITEM_FIELDBUNDLE%ot)
         fbundlep => siwrap(i)%si%datap%fbp%this
@@ -2206,6 +2216,7 @@ contains
             ESMF_CONTEXT,  &
             rcToReturn=rc)) return
 
+        !tdk:bc: check unique geometry cache for each field in the bundle
 
       case (ESMF_STATEITEM_ROUTEHANDLE%ot)
         rhandlep => siwrap(i)%si%datap%rp
@@ -2375,7 +2386,8 @@ contains
 !     Return code; equals {\tt ESMF\_SUCCESS} if there are no errors.
 !   \end{description}
 !EOPI
-
+    !tdk:bc: we must always reconcile attributes if that is how geometry references
+    !        are passed around
     integer :: localrc
     integer :: memstat
 
